@@ -13,7 +13,7 @@ RUN set -ex && \
         gpg --keyserver keyserver.pgp.com --recv-keys "$key" ; \
     done
 
-ENV TELEGRAF_VERSION 1.6.4
+ENV TELEGRAF_VERSION 1.8.0
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
     case "${dpkgArch##*-}" in \
       amd64) ARCH='amd64';; \
@@ -22,12 +22,19 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" && \
       armel) ARCH='armel';; \
       *)     echo "Unsupported architecture: ${dpkgArch}"; exit 1;; \
     esac && \
+    wget --no-verbose https://dl.influxdata.com/telegraf/releases/telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb.asc && \
+    echo "asc file downloaded" && \
     wget --no-verbose https://dl.influxdata.com/telegraf/releases/telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb && \
+    echo "telegraf downloaded " && \
+    gpg --batch --verify telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb.asc telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb && \
+    echo " gpg verified " && \
     dpkg -i telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb && \
-    rm -f telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb*
+    echo " telegraf installed.. " && \
+    rm -f telegraf_${TELEGRAF_VERSION}-1_${ARCH}.deb* 
+    
 
 EXPOSE 8125/udp 8092/udp 8094
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["telegraf"]
+CMD ["/usr/bin/telegraf"]
