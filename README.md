@@ -2,7 +2,7 @@
 
 Real-time monitoring solution for Azure SQL Server Managed instances using Telegraf, InfluxDB and grafana. Telegraf now supports managed instances from version 1.8.0.
 
-Given Managed instances server properties and other storage aspects aren't the same as on-premise, a set of dashboards are available as well as described in the blog: 
+Given Managed instances server properties and other storage aspects aren't the same as on-premise, a set of dashboards are available as well as described in the blog: https://blogs.msdn.microsoft.com/sqlcat/2018/09/26/real-time-performance-monitoring-for-azure-sql-database-managed-instance/
 
 
 ### Step 1 : Install Git and Docker
